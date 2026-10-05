@@ -1,8 +1,12 @@
-# Läuft automatisch, sobald auf GitHub ein Release veröffentlicht wird.
+# Läuft automatisch, sobald ein Versions-Tag (z.B. v1.2.0) gesetzt
+# oder auf GitHub ein Release veröffentlicht wird.
+# Tags mit Bindestrich (z.B. v1.2.0-beta1) gelten als Testversion (nur prerelease.cfg).
 # Prüft die Version und trägt sie in release.cfg / prerelease.cfg ein,
 # damit alle LoxBerrys das Update finden.
 name: Release für LoxBerry eintragen
 on:
+  push:
+    tags: ['v*']
   release:
     types: [published]
 permissions:
@@ -16,17 +20,20 @@ jobs:
           ref: main
       - name: Version prüfen und release.cfg schreiben
         run: |
-          TAG="${{ github.event.release.tag_name }}"
+          TAG="${{ github.event.release.tag_name || github.ref_name }}"
           VER="${TAG#v}"
-          CFGVER=$(grep -m1 '^VERSION=' plugin.cfg | cut -d= -f2)
-          if [ "$VER" != "$CFGVER" ]; then
+          git fetch --depth 1 origin "refs/tags/$TAG:refs/tags/$TAG"
+          CFGVER=$(git show "$TAG:plugin.cfg" | grep -m1 '^VERSION=' | cut -d= -f2)
+          if [ "${VER%%-*}" != "$CFGVER" ] && [ "$VER" != "$CFGVER" ]; then
             echo "::error::Tag $TAG passt nicht zu VERSION=$CFGVER in plugin.cfg"; exit 1
           fi
           URL="https://github.com/${{ github.repository }}/archive/refs/tags/$TAG.zip"
-          INFO="https://github.com/${{ github.repository }}/releases"
+          INFO="https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md"
           write() { printf '[AUTOUPDATE]\n# Automatisch erzeugt durch .github/workflows/release.yml\nVERSION=%s\nARCHIVEURL=%s\nINFOURL=%s\n' "$VER" "$URL" "$INFO" > "$1"; }
           write prerelease.cfg
-          if [ "${{ github.event.release.prerelease }}" != "true" ]; then write release.cfg; fi
+          PRE="${{ github.event.release.prerelease }}"
+          case "$TAG" in *-*) PRE=true ;; esac
+          if [ "$PRE" != "true" ]; then write release.cfg; fi
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add release.cfg prerelease.cfg
