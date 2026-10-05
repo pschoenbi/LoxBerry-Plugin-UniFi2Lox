@@ -1,5 +1,8 @@
 # Änderungen
 
+## 1.1.2
+- Knopf „Dokumentation“ in der LoxBerry-Plugin-Verwaltung verlinkt die Anleitung
+
 ## 1.1.1
 - Keine fest eingetragenen Pfade zu /opt/loxberry mehr (Warnung „HARDCODED PATH'S“ bei der Installation behoben)
 - Plugin funktioniert auch, wenn LoxBerry den Plugin-Ordner umbenennt
