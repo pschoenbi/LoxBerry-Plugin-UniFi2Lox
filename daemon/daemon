@@ -1,0 +1,6 @@
+#!/bin/bash
+# Started by LoxBerry as root at boot
+LBHOMEDIR="${LBHOMEDIR:-/opt/loxberry}"
+rm -f "$LBHOMEDIR/data/plugins/unifi2lox/stopped.flag"
+su loxberry -s /bin/bash -c "LBHOMEDIR=$LBHOMEDIR $LBHOMEDIR/bin/plugins/unifi2lox/service.sh start" &
+exit 0

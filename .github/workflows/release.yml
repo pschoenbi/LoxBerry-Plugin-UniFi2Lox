@@ -1,0 +1,34 @@
+# Läuft automatisch, sobald auf GitHub ein Release veröffentlicht wird.
+# Prüft die Version und trägt sie in release.cfg / prerelease.cfg ein,
+# damit alle LoxBerrys das Update finden.
+name: Release für LoxBerry eintragen
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+jobs:
+  update-cfg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Version prüfen und release.cfg schreiben
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VER="${TAG#v}"
+          CFGVER=$(grep -m1 '^VERSION=' plugin.cfg | cut -d= -f2)
+          if [ "$VER" != "$CFGVER" ]; then
+            echo "::error::Tag $TAG passt nicht zu VERSION=$CFGVER in plugin.cfg"; exit 1
+          fi
+          URL="https://github.com/${{ github.repository }}/archive/refs/tags/$TAG.zip"
+          INFO="https://github.com/${{ github.repository }}/releases"
+          write() { printf '[AUTOUPDATE]\n# Automatisch erzeugt durch .github/workflows/release.yml\nVERSION=%s\nARCHIVEURL=%s\nINFOURL=%s\n' "$VER" "$URL" "$INFO" > "$1"; }
+          write prerelease.cfg
+          if [ "${{ github.event.release.prerelease }}" != "true" ]; then write release.cfg; fi
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add release.cfg prerelease.cfg
+          git commit -m "LoxBerry-Update auf $TAG" || echo "nichts zu ändern"
+          git push

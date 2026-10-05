@@ -1,0 +1,5 @@
+#!/bin/bash
+# Runs as root before the plugin is removed
+pkill -f "bin/plugins/unifi2lox/go2rtc" 2>/dev/null
+rm -f /dev/shm/unifi2lox_* 2>/dev/null
+exit 0
