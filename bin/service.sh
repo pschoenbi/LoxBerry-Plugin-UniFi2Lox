@@ -2,8 +2,9 @@
 # Start/stop the go2rtc streaming engine of the unifi2lox plugin.
 # Usage: service.sh start|stop|restart|status|watchdog
 
-LBHOMEDIR="${LBHOMEDIR:-/opt/loxberry}"
-PLUGIN="unifi2lox"
+SELF_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"   # $LBHOMEDIR/bin/plugins/<folder>
+LBHOMEDIR="${LBHOMEDIR:-$(cd "$SELF_DIR/../../.." && pwd)}"
+PLUGIN="$(basename "$SELF_DIR")"
 BIN="$LBHOMEDIR/bin/plugins/$PLUGIN"
 CFG="$LBHOMEDIR/config/plugins/$PLUGIN/config.json"
 DATA="$LBHOMEDIR/data/plugins/$PLUGIN"

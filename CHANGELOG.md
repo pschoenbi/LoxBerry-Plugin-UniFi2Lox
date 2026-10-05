@@ -1,5 +1,9 @@
 # Änderungen
 
+## 1.1.1
+- Keine fest eingetragenen Pfade zu /opt/loxberry mehr (Warnung „HARDCODED PATH'S“ bei der Installation behoben)
+- Plugin funktioniert auch, wenn LoxBerry den Plugin-Ordner umbenennt
+
 ## 1.1.0
 - Mehrsprachig: DE, EN, FR, IT, ES, NL, SV, NO (folgt der LoxBerry-Spracheinstellung, sonst Englisch)
 - Englisches README für GitHub

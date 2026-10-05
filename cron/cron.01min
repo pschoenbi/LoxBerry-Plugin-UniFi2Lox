@@ -1,3 +1,6 @@
 #!/bin/bash
 # Watchdog: restarts go2rtc if it died, trims the log
-LBHOMEDIR="${LBHOMEDIR:-/opt/loxberry}" "${LBHOMEDIR:-/opt/loxberry}/bin/plugins/unifi2lox/service.sh" watchdog >/dev/null 2>&1
+# (copied to $LBHOMEDIR/system/cron/cron.01min/; fallback: three levels above this script)
+LBHOMEDIR="${LBHOMEDIR:-$(cd "$(dirname "$(readlink -f "$0")")/../../.." && pwd)}"
+export LBHOMEDIR
+"$LBHOMEDIR/bin/plugins/REPLACELBPPLUGINDIR/service.sh" watchdog >/dev/null 2>&1

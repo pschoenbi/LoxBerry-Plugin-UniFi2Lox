@@ -19,8 +19,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-LBHOMEDIR = os.environ.get("LBHOMEDIR", "/opt/loxberry")
-PLUGIN = "unifi2lox"
+# this file lives in $LBHOMEDIR/bin/plugins/<folder>/
+_SELF = os.path.dirname(os.path.realpath(__file__))
+LBHOMEDIR = os.environ.get("LBHOMEDIR") or os.path.realpath(os.path.join(_SELF, "..", "..", ".."))
+PLUGIN = os.path.basename(_SELF)
 CFGDIR = os.environ.get("U2L_CFGDIR", os.path.join(LBHOMEDIR, "config/plugins", PLUGIN))
 DATADIR = os.environ.get("U2L_DATADIR", os.path.join(LBHOMEDIR, "data/plugins", PLUGIN))
 CFGFILE = os.path.join(CFGDIR, "config.json")

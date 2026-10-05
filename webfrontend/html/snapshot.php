@@ -2,7 +2,8 @@
 // Public JPEG endpoint for the Loxone "Bild-URL" of a custom intercom.
 //   /plugins/unifi2lox/snapshot.php?cam=<slug>              + HTTP Basic Auth (Loxone user/password fields)
 //   /plugins/unifi2lox/snapshot.php?cam=<slug>&key=<key>    without auth fields
-$home = getenv('LBHOMEDIR') ?: '/opt/loxberry';
+// this file lives in $LBHOMEDIR/webfrontend/<html|htmlauth>/plugins/<folder>/
+$home = getenv('LBHOMEDIR') ?: dirname(realpath(__DIR__), 4);
 require_once $home . '/bin/plugins/' . basename(__DIR__) . '/common.php';
 
 function deny($code, $msg)

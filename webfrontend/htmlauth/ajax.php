@@ -1,6 +1,7 @@
 <?php
 // JSON backend of the admin page (inside LoxBerry auth)
-$home = getenv('LBHOMEDIR') ?: '/opt/loxberry';
+// this file lives in $LBHOMEDIR/webfrontend/<html|htmlauth>/plugins/<folder>/
+$home = getenv('LBHOMEDIR') ?: dirname(realpath(__DIR__), 4);
 require_once $home . '/bin/plugins/' . basename(__DIR__) . '/common.php';
 
 $action = $_GET['action'] ?? '';

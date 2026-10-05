@@ -1,6 +1,7 @@
 #!/bin/bash
 # Save user configuration before LoxBerry replaces the plugin folders
-PFOLDER="$3"; LBH="${5:-/opt/loxberry}"
+PFOLDER="$3"; LBH="${5:-$LBHOMEDIR}"
+[ -n "$LBH" ] || { echo "<FAIL> LBHOMEDIR unbekannt"; exit 2; }
 BACKUP="/tmp/${1}_upgrade"
 mkdir -p "$BACKUP"
 cp -a "$LBH/config/plugins/$PFOLDER/." "$BACKUP/config/" 2>/dev/null

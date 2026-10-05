@@ -1,6 +1,7 @@
 #!/bin/bash
 # Runs as user loxberry.  $1 tmpdir  $2 name  $3 folder  $4 version  $5 LBHOMEDIR
-PFOLDER="$3"; LBH="${5:-/opt/loxberry}"
+PFOLDER="$3"; LBH="${5:-$LBHOMEDIR}"
+[ -n "$LBH" ] || { echo "<FAIL> LBHOMEDIR unbekannt"; exit 2; }
 BIN="$LBH/bin/plugins/$PFOLDER"
 CFGDIR="$LBH/config/plugins/$PFOLDER"
 DATA="$LBH/data/plugins/$PFOLDER"

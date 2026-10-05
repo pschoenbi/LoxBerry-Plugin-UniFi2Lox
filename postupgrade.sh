@@ -1,5 +1,6 @@
 #!/bin/bash
-PFOLDER="$3"; LBH="${5:-/opt/loxberry}"
+PFOLDER="$3"; LBH="${5:-$LBHOMEDIR}"
+[ -n "$LBH" ] || { echo "<FAIL> LBHOMEDIR unbekannt"; exit 2; }
 BACKUP="/tmp/${1}_upgrade"
 if [ -d "$BACKUP/config" ]; then
     cp -a "$BACKUP/config/." "$LBH/config/plugins/$PFOLDER/"

@@ -2,7 +2,8 @@
 // Shared helpers for the unifi2lox web pages (admin UI + public snapshot endpoint)
 
 define('U2L_FOLDER', basename(__DIR__));
-define('U2L_HOME', getenv('LBHOMEDIR') ?: '/opt/loxberry');
+// this file lives in $LBHOMEDIR/bin/plugins/<folder>/
+define('U2L_HOME', getenv('LBHOMEDIR') ?: dirname(__DIR__, 3));
 define('U2L_BIN', U2L_HOME . '/bin/plugins/' . U2L_FOLDER);
 define('U2L_CFG', U2L_HOME . '/config/plugins/' . U2L_FOLDER . '/config.json');
 define('U2L_DATA', U2L_HOME . '/data/plugins/' . U2L_FOLDER);
