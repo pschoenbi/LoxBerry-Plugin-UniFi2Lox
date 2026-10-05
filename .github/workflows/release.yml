@@ -1,11 +1,13 @@
-# Läuft automatisch, sobald ein Versions-Tag (z.B. v1.2.0) gesetzt
-# oder auf GitHub ein Release veröffentlicht wird.
-# Tags mit Bindestrich (z.B. v1.2.0-beta1) gelten als Testversion (nur prerelease.cfg).
-# Prüft die Version und trägt sie in release.cfg / prerelease.cfg ein,
-# damit alle LoxBerrys das Update finden.
+# Trägt eine neue Plugin-Version in release.cfg / prerelease.cfg ein,
+# damit alle LoxBerrys das Update finden. Läuft automatisch bei:
+#   - einem Release-Branch   release-1.2.0          (so veröffentlicht Claude)
+#   - einem Versions-Tag     v1.2.0                 (oder ein GitHub-Release)
+# Versionen mit Bindestrich (release-1.2.0-beta1 / v1.2.0-beta1) gelten als
+# Testversion und landen nur in prerelease.cfg.
 name: Release für LoxBerry eintragen
 on:
   push:
+    branches: ['release-*']
     tags: ['v*']
   release:
     types: [published]
@@ -18,24 +20,28 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
       - name: Version prüfen und release.cfg schreiben
         run: |
-          TAG="${{ github.event.release.tag_name || github.ref_name }}"
-          VER="${TAG#v}"
-          git fetch --depth 1 origin "refs/tags/$TAG:refs/tags/$TAG"
-          CFGVER=$(git show "$TAG:plugin.cfg" | grep -m1 '^VERSION=' | cut -d= -f2)
-          if [ "${VER%%-*}" != "$CFGVER" ] && [ "$VER" != "$CFGVER" ]; then
-            echo "::error::Tag $TAG passt nicht zu VERSION=$CFGVER in plugin.cfg"; exit 1
+          REF="${{ github.event.release.tag_name || github.ref_name }}"
+          case "$REF" in
+            release-*) VER="${REF#release-}"; KIND=heads ;;
+            *)         VER="${REF#v}";        KIND=tags  ;;
+          esac
+          CFGVER=$(git show "origin/$REF:plugin.cfg" 2>/dev/null || git show "$REF:plugin.cfg")
+          CFGVER=$(echo "$CFGVER" | grep -m1 '^VERSION=' | cut -d= -f2)
+          if [ "$VER" != "$CFGVER" ] && [ "${VER%%-*}" != "$CFGVER" ]; then
+            echo "::error::$REF passt nicht zu VERSION=$CFGVER in plugin.cfg"; exit 1
           fi
-          URL="https://github.com/${{ github.repository }}/archive/refs/tags/$TAG.zip"
+          URL="https://github.com/${{ github.repository }}/archive/refs/$KIND/$REF.zip"
           INFO="https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md"
           write() { printf '[AUTOUPDATE]\n# Automatisch erzeugt durch .github/workflows/release.yml\nVERSION=%s\nARCHIVEURL=%s\nINFOURL=%s\n' "$VER" "$URL" "$INFO" > "$1"; }
           write prerelease.cfg
           PRE="${{ github.event.release.prerelease }}"
-          case "$TAG" in *-*) PRE=true ;; esac
+          case "$VER" in *-*) PRE=true ;; esac
           if [ "$PRE" != "true" ]; then write release.cfg; fi
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add release.cfg prerelease.cfg
-          git commit -m "LoxBerry-Update auf $TAG" || echo "nichts zu ändern"
-          git push
+          git commit -m "LoxBerry-Update auf $VER" || echo "nichts zu ändern"
+          git push origin HEAD:main
