@@ -72,6 +72,7 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
     <button class="u2l-btn small" data-role="none" onclick="svc('stop')"><?=T('BTN_STOP')?></button>
   </div>
 
+  <p><a class="u2l-btn" href="https.php" data-role="none">HTTPS / Remote access</a></p>
   <h2><?=T('H_PROTECT')?></h2>
   <p class="u2l-sub"><?=TH('SUB_PROTECT')?></p>
   <div class="u2l-box">

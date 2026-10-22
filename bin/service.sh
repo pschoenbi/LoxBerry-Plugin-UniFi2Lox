@@ -53,11 +53,15 @@ start() {
             [ "$(readlink -f "/proc/$p/exe" 2>/dev/null)" = "$(readlink -f "$GO2RTC")" ] && echo "$p" >"$PIDFILE"
         done
     fi
-    if is_running; then echo "STARTED $(cat "$PIDFILE")"; return 0; fi
+    if is_running; then
+        [ ! -f "$BIN/https_manager.py" ] || python3 "$BIN/https_manager.py" watchdog >/dev/null 2>&1
+        echo "STARTED $(cat "$PIDFILE")"; return 0
+    fi
     echo "FAILED"; return 1
 }
 
 stop() {
+    [ ! -f "$BIN/https_manager.py" ] || python3 "$BIN/https_manager.py" stop >/dev/null 2>&1
     if is_running; then
         local pid; pid=$(cat "$PIDFILE")
         kill "$pid" 2>/dev/null
@@ -87,6 +91,7 @@ case "$1" in
     status)  if is_running; then echo "RUNNING $(cat "$PIDFILE")"; else echo "STOPPED"; exit 1; fi ;;
     watchdog)
         trim_log
+        [ ! -f "$BIN/https_manager.py" ] || python3 "$BIN/https_manager.py" watchdog >/dev/null 2>&1
         [ -f "$DATA/stopped.flag" ] && exit 0
         if ! is_running && enabled; then
             echo "$(date '+%F %T') watchdog: go2rtc not running - restarting" >>"$LOG"

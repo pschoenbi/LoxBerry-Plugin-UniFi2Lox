@@ -1,0 +1,48 @@
+{
+  "caddy": {
+    "version": "v2.11.7",
+    "assets": {
+      "amd64": {
+        "url": "https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_linux_amd64.tar.gz",
+        "sha256": "727b91701a392de6ebc5027509f548bf39979e5216340d0faed8fa5e69c84f8b"
+      },
+      "arm64": {
+        "url": "https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_linux_arm64.tar.gz",
+        "sha256": "d8fc6d179a5d283028a472a5618564f6ad8a86fed513e64f032b3b0b7cc45e42"
+      },
+      "armv6": {
+        "url": "https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_linux_armv6.tar.gz",
+        "sha256": "6aa74c9643ca6f9fbcbc25d123e78932129371eda80862ced9ac3a6e73d09bc1"
+      },
+      "armv7": {
+        "url": "https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_linux_armv7.tar.gz",
+        "sha256": "492c730b1b992e0d3e4346d1652128ae6ad99208834d3d78c27b3b6c9541c841"
+      }
+    }
+  },
+  "lego": {
+    "version": "v5.5.2",
+    "assets": {
+      "386": {
+        "url": "https://github.com/go-acme/lego/releases/download/v5.5.2/lego_v5.5.2_linux_386.tar.gz",
+        "sha256": "425b111caf39273424f811e05fdf83ceb21b929aebf578ca5c4524f0816ceec9"
+      },
+      "amd64": {
+        "url": "https://github.com/go-acme/lego/releases/download/v5.5.2/lego_v5.5.2_linux_amd64.tar.gz",
+        "sha256": "2a35505089e7772c92e1e9ac144df91151ef2eca8568630db0ff91fca06d9bef"
+      },
+      "arm64": {
+        "url": "https://github.com/go-acme/lego/releases/download/v5.5.2/lego_v5.5.2_linux_arm64.tar.gz",
+        "sha256": "15b14ec2ab14fde69cc8396eb0204c5ce4327e31a486953225a6059b26db3e8c"
+      },
+      "armv6": {
+        "url": "https://github.com/go-acme/lego/releases/download/v5.5.2/lego_v5.5.2_linux_armv6.tar.gz",
+        "sha256": "2829eed8dca0a7589c8354bce7406aea1ecd1a79b18dfa969c0b4ce034a4611b"
+      },
+      "armv7": {
+        "url": "https://github.com/go-acme/lego/releases/download/v5.5.2/lego_v5.5.2_linux_armv7.tar.gz",
+        "sha256": "59214f98978c10d5308ac5bf2c805a9c9484f545f498d9c90622ad0b16ba4525"
+      }
+    }
+  }
+}

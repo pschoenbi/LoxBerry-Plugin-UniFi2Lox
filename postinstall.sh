@@ -1,5 +1,6 @@
 #!/bin/bash
 # Runs as user loxberry.  $1 tmpdir  $2 name  $3 folder  $4 version  $5 LBHOMEDIR
+set -e
 PFOLDER="$3"; LBH="${5:-$LBHOMEDIR}"
 [ -n "$LBH" ] || { echo "<FAIL> LBHOMEDIR unbekannt"; exit 2; }
 BIN="$LBH/bin/plugins/$PFOLDER"
@@ -9,7 +10,7 @@ GO2RTC_VERSION="v1.9.14"
 BACKUP="/tmp/${1}_upgrade"
 
 mkdir -p "$DATA" "$LBH/log/plugins/$PFOLDER"
-chmod +x "$BIN/service.sh" "$BIN/unifi2lox.py"
+chmod +x "$BIN/service.sh" "$BIN/unifi2lox.py" "$BIN/https_manager.py" "$BIN/https_dns_hook.py"
 
 # ---- go2rtc binary --------------------------------------------------------
 case "$(dpkg --print-architecture 2>/dev/null || uname -m)" in
@@ -25,13 +26,15 @@ if [ -x "$BACKUP/go2rtc" ]; then
     cp -a "$BACKUP/go2rtc" "$BIN/go2rtc"
     echo "<OK> go2rtc aus vorheriger Version übernommen"
 fi
-# always try to fetch the pinned version, fall back to latest
-for URL in "https://github.com/AlexxIT/go2rtc/releases/download/$GO2RTC_VERSION/$ASSET" \
-           "https://github.com/AlexxIT/go2rtc/releases/latest/download/$ASSET"; do
+# Test build: reuse the tested engine; never fetch an unrelated latest release.
+if [ -x "$BIN/go2rtc" ] && "$BIN/go2rtc" -version 2>&1 | grep -Eq 'version 1[.]9[.]14([[:space:]]|$)'; then
+    echo "<OK> Vorhandenes go2rtc 1.9.14 wird beibehalten"
+else
+for URL in "https://github.com/AlexxIT/go2rtc/releases/download/$GO2RTC_VERSION/$ASSET"; do
     echo "<INFO> Lade $URL"
     if curl -fsSL --retry 3 -o "$BIN/go2rtc.new" "$URL"; then
         chmod +x "$BIN/go2rtc.new"
-        if "$BIN/go2rtc.new" -version >/dev/null 2>&1; then
+        if "$BIN/go2rtc.new" -version 2>&1 | grep -Eq 'version 1[.]9[.]14([[:space:]]|$)'; then
             mv -f "$BIN/go2rtc.new" "$BIN/go2rtc"
             echo "<OK> go2rtc installiert: $("$BIN/go2rtc" -version 2>&1 | head -1)"
             break
@@ -39,7 +42,8 @@ for URL in "https://github.com/AlexxIT/go2rtc/releases/download/$GO2RTC_VERSION/
     fi
     rm -f "$BIN/go2rtc.new"
 done
-if [ ! -x "$BIN/go2rtc" ]; then
+fi
+if [ ! -x "$BIN/go2rtc" ] || ! "$BIN/go2rtc" -version 2>&1 | grep -Eq 'version 1[.]9[.]14([[:space:]]|$)'; then
     echo "<FAIL> go2rtc konnte nicht heruntergeladen werden"
     exit 2
 fi

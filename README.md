@@ -50,6 +50,11 @@ Periphery → Intercom → **Custom Intercom**:
 
 For remote access via the Loxone app the stream must be reachable from outside (VPN recommended).
 
+## Optional HTTPS (experimental)
+
+Managed camera-only HTTPS, automatic or manual DNS validation and existing
+certificates are described in [the HTTPS guide](docs/https.md). Disabled by default.
+
 ## Translations
 
 All texts are in `templates/lang/language_<code>.ini`. To add a language, copy `language_en.ini`,
