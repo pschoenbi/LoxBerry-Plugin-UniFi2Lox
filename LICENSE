@@ -1,0 +1,53 @@
+# LoxBerry-Plugin-UniFi2Lox — License and Copyright Notice
+
+Copyright (c) 2026 Patrick Schoenbaechler.
+
+## Permission to use
+
+Permission is granted to download, install, and use official releases of
+LoxBerry-Plugin-UniFi2Lox for personal or commercial operation of a LoxBerry
+installation, free of charge.
+
+The source code is publicly available for inspection. Public availability
+does not, by itself, grant a general open-source license.
+
+## Rights reserved
+
+Except where expressly permitted above, by applicable law, by GitHub's
+Terms of Service (including permitted GitHub fork functionality), or by
+separate written permission from the relevant rights holder, no license
+is granted to reproduce, modify, distribute, sublicense, sell, or publish
+derivative versions of copyrighted material in this repository.
+
+In particular, redistribution of a modified plugin package or use of the
+original project's name to imply an official endorsement requires prior
+authorization where the rights holder's permission is legally required.
+Nothing here is intended to prohibit identifying the original project
+truthfully or to claim exclusive trademark rights.
+
+## Third-party material and contributions
+
+This notice applies only to material for which Patrick Schoenbaechler
+holds the relevant rights. Third-party components, dependencies, and
+contributions remain subject to the rights and terms of their respective
+copyright holders. No contributor's independently copyrighted code
+becomes exclusively owned by the project maintainer merely by being
+submitted or accepted.
+
+Contributions may be merged and distributed only with the permissions
+necessary to do so. Contributors are encouraged to confirm their licensing
+terms in their pull requests.
+
+## Existing permissions
+
+This notice takes effect prospectively and does not revoke licenses,
+permissions, or other rights validly granted earlier. Mandatory legal
+exceptions and rights under the GitHub Terms of Service are unaffected.
+
+## Warranty disclaimer
+
+The software is provided "AS IS", without any warranty to the extent
+permitted by applicable law. Liability is limited to the extent
+permitted by applicable law.
+
+For permission requests, contact the repository maintainer through GitHub.
