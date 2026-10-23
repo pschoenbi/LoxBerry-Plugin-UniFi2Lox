@@ -70,7 +70,7 @@ case 'save':
         'username'          => preg_replace('/[^A-Za-z0-9_.-]/', '', (string)($s['username'] ?? 'loxone')) ?: 'loxone',
         'password'          => (string)($s['password'] ?? '') !== '' ? (string)$s['password'] : ($old['server']['password'] ?? ''),
         'snapshot_cache_ms' => max(0, min(10000, (int)($s['snapshot_cache_ms'] ?? 1000))),
-        'hwaccel'           => in_array($s['hwaccel'] ?? '', ['off', 'auto', 'vaapi', 'v4l2m2m', 'rkmpp'], true) ? $s['hwaccel'] : 'off',
+        'hwaccel'           => in_array($s['hwaccel'] ?? '', ['off', 'auto', 'vaapi', 'vaapi_decode', 'v4l2m2m', 'rkmpp'], true) ? $s['hwaccel'] : 'off',
         'rtsp_lan'          => !empty($s['rtsp_lan']),
         'loglevel'          => in_array($s['loglevel'] ?? '', ['debug', 'info', 'warn', 'error'], true) ? $s['loglevel'] : 'warn',
     ]);

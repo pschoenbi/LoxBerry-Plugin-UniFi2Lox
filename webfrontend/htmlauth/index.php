@@ -125,6 +125,7 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
           <option value="off"><?=T('OPT_HW_OFF')?></option>
           <option value="auto"><?=T('OPT_HW_AUTO')?></option>
           <option value="vaapi"><?=T('OPT_HW_VAAPI')?></option>
+          <option value="vaapi_decode"><?=T('OPT_HW_VAAPI_DECODE')?></option>
           <option value="rkmpp"><?=T('OPT_HW_RKMPP')?></option>
         </select></label>
       <label class="u2l-f"><?=T('F_CACHE')?> <small><?=T('F_CACHE_HINT')?></small>

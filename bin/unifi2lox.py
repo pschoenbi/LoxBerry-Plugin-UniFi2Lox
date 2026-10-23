@@ -200,6 +200,13 @@ def build_go2rtc(cfg, sources):
         "streams": {},
         "preload": {},
     }
+    if hw == "vaapi_decode":
+        # A custom input requests decoding only. go2rtc's #hardware=vaapi
+        # also selects mjpeg_vaapi, which older Intel GPUs cannot encode.
+        g["ffmpeg"]["u2l/vaapi_decode"] = (
+            "-hwaccel vaapi -hwaccel_device /dev/dri/renderD128 "
+            "-hwaccel_output_format vaapi " + g["ffmpeg"]["rtsp"]
+        )
     if srv.get("username") and srv.get("password"):
         g["api"]["username"] = srv["username"]
         g["api"]["password"] = srv["password"]
@@ -220,13 +227,25 @@ def build_go2rtc(cfg, sources):
 
         src = "ffmpeg:%s#video=mjpeg#raw=%s" % (slug, tpl)
         width = int(cam.get("width", 0) or 0)
-        if width > 0:
-            src += "#width=%d" % width
         rot = int(cam.get("rotate", 0) or 0)
-        if rot in (90, 180, 270):
-            src += "#rotate=%d" % rot
-        if hw and hw != "off":
-            src += "#hardware" if hw == "auto" else "#hardware=%s" % hw
+        if hw == "vaapi_decode":
+            # Download before CPU scaling/rotation and keep one filter graph.
+            # Mixing a raw -vf with go2rtc's #width/#rotate would overwrite it.
+            filters = ["hwdownload", "format=nv12"]
+            if width > 0:
+                filters.append("scale=%d:-1" % width)
+            if rot in (90, 180, 270):
+                filters.append({90: "transpose=1", 180: "transpose=1,transpose=1",
+                                270: "transpose=2"}[rot])
+            g["ffmpeg"][tpl] += " -vf " + ",".join(filters)
+            src += "#input=u2l/vaapi_decode"
+        else:
+            if width > 0:
+                src += "#width=%d" % width
+            if rot in (90, 180, 270):
+                src += "#rotate=%d" % rot
+            if hw and hw != "off":
+                src += "#hardware" if hw == "auto" else "#hardware=%s" % hw
         g["streams"][slug + "_mjpeg"] = [src]
 
         pre = cam.get("preload", "rtsp")
